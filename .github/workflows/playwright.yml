@@ -4,6 +4,10 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+permissions:
+    contents: read
+    pages: write
+    id-token: write
 jobs:
   test:
     timeout-minutes: 60
@@ -25,3 +29,17 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+    - name: Upload Pages Artifact
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: playwright-report
+        retention-days: 3   
+    - name: Setup Pages
+      uses: actions/configure-pages@v2
+    - uses: actions/download-artifact@v2
+      with:
+          name: 'github-pages' 
+    - name: Deploy to GitHub Pages
+      id: github-pages
+      uses: actions/deploy-pages@v1
+        
